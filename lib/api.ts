@@ -9,7 +9,8 @@ const getProducts = async (): Promise<Product[]> => {  // (): Promise<Product[]>
   try {
     // appel api au endpoint des produits
     const response = await fetch(`${API_URL}/products`);
-    // vérification de la réponse
+
+    // si la reponse n'est pas ok on interropmt et o lance une erreur
     if (!response.ok) {
       // gestion de l'erreur
       throw new Error('Network response was not ok');
