@@ -15,7 +15,7 @@ interface ButtonProps {
   
 }
 
-const Button: React.FC<ButtonProps> = ({
+const Button:React.FC<ButtonProps> = ({
   title,
   onPress,
   variant = 'primary',
@@ -37,7 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   const textStyle = [
     styles.text,
     styles[`${variant}Text`],
-    styles[`${size}Text`]
+    textStyle
   ]
 
   return (
@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
   },
-  
+
 })
 //#endregion
