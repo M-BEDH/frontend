@@ -9,6 +9,7 @@ import { create } from 'zustand';
 // Middleware pour la persistance de l'état
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+
 // Définition de l'interface pour le state du store
 interface ProductsState {
   products: Product[];                    // Liste complète des produits
@@ -16,7 +17,7 @@ interface ProductsState {
   categories: string[];                  // Liste des catégories de produits disponibles
   loading: boolean;                      // Indicateur de chargement
   error: string | null;                  // Message d'erreur, s'il y en a
-  // Action to fetch products
+
   // Méthode pour récupérer les produits depuis l'API
   fetchProducts: () => Promise<void>;
   // Méthode pour récupérer les catégories depuis l'API
@@ -27,7 +28,7 @@ interface ProductsState {
 export const useProductStore = create<ProductsState>()(
   // Middleware de persistance
   persist(
-    (set, get) => ({                           // set=modifier le state, get=accéder au state
+    (set, get) => ({                           
       // Initialisation des valeurs du state
       products: [],
       filteredProducts: [],
@@ -66,6 +67,7 @@ export const useProductStore = create<ProductsState>()(
         }
       },
     }),
+    // Options du middleware de persistance
     {
       name: 'product-storage', // nom unique pour le stockage
       storage: createJSONStorage(() => AsyncStorage),
