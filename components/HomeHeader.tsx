@@ -9,57 +9,77 @@ import { AppColors } from '@/constants/theme'
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 
+//#region HomeHeader
 const HomeHeader = () => {
   const router = useRouter()
   return (
+    
     <SafeAreaView style={styles.container}>
+
       <View style={styles.header}>
+
         <Logo />
         <View style={styles.iconContainer}>
+          {/*Search Icon*/}
           <TouchableOpacity 
             style={styles.searchButton}
             onPress={() => router.push('/(tabs)/search')}
           >
+            {/* Search Icon */}
             <AntDesign 
               name="search" 
               size={20} 
               color={AppColors.primary[700]}
             />
           </TouchableOpacity>
+
+          {/* Favorites Icon */}
           <TouchableOpacity 
             style={styles.searchButton}
             onPress={() => router.push('/(tabs)/favorites')}
           >
+            {/* Favorites Icon */}
             <MaterialCommunityIcons 
               name="heart-outline" 
               size={20} 
               color={AppColors.primary[700]}
             />
+            {/* Favorites Icon */}
             <View style={styles.itemsView}>
               <Text style={styles.itemsText}>0</Text>
             </View>
+
           </TouchableOpacity>
+
+          {/* Cart Icon */}
           <TouchableOpacity 
             style={styles.searchButton}
             onPress={() => router.push('/(tabs)/cart')}
           >
+            {/* Cart Icon */}
             <MaterialCommunityIcons 
               name="cart-outline" 
               size={20} 
               color={AppColors.primary[700]}
             />
+            {/* Cart Icon */}
             <View style={styles.itemsView}>
+
               <Text style={styles.itemsText}>0</Text>
             </View>
           </TouchableOpacity>
+
         </View>
+        
       </View>
     </SafeAreaView>
   )
 }
+//#endregion
 
 export default HomeHeader
 
+//#region Styles
 const styles = StyleSheet.create({
   container: {
     backgroundColor: AppColors.background.primary,
@@ -111,3 +131,4 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 })
+//#endregion

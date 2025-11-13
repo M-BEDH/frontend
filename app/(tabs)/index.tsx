@@ -7,6 +7,7 @@ import { Product } from '@/type';
 import { useProductStore } from '@/store/productStore';
 import { AppColors } from '@/constants/theme';
 
+// #region HomeScreen
 export default function HomeScreen() {
   // State local pour stocker les "produits en vedette"
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -31,7 +32,9 @@ export default function HomeScreen() {
       setFeaturedProducts(reverseProducts as Product[]);
     }
   }, [products]);
+  //#endregion
   
+  //#region loading et error
   if (loading) {
     return(
       <SafeAreaView style={styles.container}>
@@ -68,6 +71,7 @@ export default function HomeScreen() {
   );
 }
 
+//#region styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,5 +91,6 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flex: 1,
-  }
+  },
+  //#endregion
 });

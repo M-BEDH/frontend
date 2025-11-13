@@ -24,7 +24,7 @@ interface ProductsState {
   fetchCategories: () => Promise<void>;
 }
 
-// Création du store avec Zustand et persistance avec AsyncStorage
+//#region Création du store avec Zustand et persistance avec AsyncStorage
 export const useProductStore = create<ProductsState>()(
   // Middleware de persistance
   persist(
@@ -35,6 +35,7 @@ export const useProductStore = create<ProductsState>()(
       categories: [],
       loading: false,
       error: null,
+      //#region FetchProduct
       // Méthode pour récupérer les produits depuis l'API
       fetchProducts: async () => {
         try {
@@ -53,6 +54,7 @@ export const useProductStore = create<ProductsState>()(
           set({ error: error.message, loading: false });
         }
       },
+      //#region FetchCategories
       // Méthode pour récupérer les catégories depuis l'API
       fetchCategories: async () => {
         try {

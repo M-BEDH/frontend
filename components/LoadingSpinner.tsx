@@ -39,6 +39,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
 export default LoadingSpinner
 
+//#region styles
 const styles = StyleSheet.create({
   container: {
     padding: 16,

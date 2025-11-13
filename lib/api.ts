@@ -2,7 +2,7 @@ import { Product } from "@/type";
 
 const API_URL = "https://fakestoreapi.com";
 
-//#region Tous les produits
+//#region Produits
 
 // on defini une fonction asynchrone getProducts qui retourne une promesse d'un tableau de produits
 const getProducts = async (): Promise<Product[]> => {  // (): Promise<Product[]>   CAD retourne un tableau de produits
@@ -24,7 +24,8 @@ const getProducts = async (): Promise<Product[]> => {  // (): Promise<Product[]>
 };
 //#endregion
 
-//#region Toutes les catégories
+//#region Catégories
+// on defini une fonction asynchrone getCategories qui retourne une promesse d'un tableau de chaînes de caractères
 const getCategories = async (): Promise<string[]> => {
   try {
     // appel api au endpoint des catégories

@@ -18,6 +18,7 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
       }}>
+        //#region index
       <Tabs.Screen
         name="index"
         options={{
@@ -27,6 +28,8 @@ export default function TabLayout() {
           ),
         }}
       />
+      //#endregion
+      //#region shop
       <Tabs.Screen
         name="shop"
         options={{
@@ -36,6 +39,8 @@ export default function TabLayout() {
           ),
         }}
       />
+      //#endregion
+      //#region profile
        <Tabs.Screen
         name="profile"
         options={{
@@ -45,6 +50,8 @@ export default function TabLayout() {
           ),
         }}
       />
+      //#endregion
+      //#region search favorites cart
       <Tabs.Screen
         name="search"
         options={{ href: null }}
@@ -57,6 +64,7 @@ export default function TabLayout() {
         name="cart"
         options={{ href: null }}
       />
+      //#endregion
     </Tabs>
 
 
