@@ -1,5 +1,6 @@
 import HomeHeader from '@/components/HomeHeader';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import ProductCard from '@/components/ProductCard';
 import { View, StyleSheet,
   Text, ScrollView,
   TouchableOpacity } from 'react-native';
@@ -10,6 +11,7 @@ import { useProductStore } from '@/store/productStore';
 import { AppColors } from '@/constants/theme';
 import { AntDesign } from '@expo/vector-icons';
 import { useRouter } from 'expo-router'
+import { FlatList } from 'react-native';
 
 // #region HomeScreen
 export default function HomeScreen() {
@@ -82,6 +84,7 @@ if (loading) {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContainerView}
         >
+          {/* Section des catégories */}
           <View style={styles.categoriesSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Catégories</Text>
@@ -106,8 +109,51 @@ if (loading) {
                  category.slice(1)}</Text>
             </TouchableOpacity>
           ))}
-        </ScrollView>
+           </ScrollView>
           </View>
+          
+          {/* Section des meilleures ventes */}
+          <View style={styles.featuredSection}>
+           <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Meilleures ventes</Text>
+             <TouchableOpacity 
+            //  onPress={navigateToAllProducts}
+             > 
+              <Text style={styles.seeAllText}>Voir tout</Text>
+            </TouchableOpacity>
+            </View>
+            <FlatList
+              data={featuredProducts}
+              keyExtractor={(item) => item.id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.featureProductsContainer}
+              renderItem={({ item }) => (
+                <View style={styles.featureProductContainer}>
+                  <ProductCard product={item} compact/>
+                </View>
+              )}
+            />
+          </View>
+          {/* Sections des produits les plus récents*/}
+          <View style={styles.newestSection}>
+           <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Nouveautés</Text>
+             <TouchableOpacity> 
+              <Text style={styles.seeAllText}>Voir tout</Text>
+            </TouchableOpacity>
+            </View>
+             <View>
+              {products?.map((product) => (
+                <View key={product.id} style={styles.productContainer}>
+                  <ProductCard
+                  product={product}
+                  customStyle={{width: '100%'}}
+                  />
+                </View>
+              ))}
+             </View>
+            </View>
         </ScrollView>
       </View>
     </View>
@@ -169,6 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+    paddingRight: 20,
   },
   sectionTitle: {
     fontFamily: 'Inter-Medium',
