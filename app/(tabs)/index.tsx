@@ -47,7 +47,9 @@ export default function HomeScreen() {
       </SafeAreaView>
     )
   }
-  
+  //#endregion
+
+  //#region error
   if (error) {
     return (
       <SafeAreaView style={styles.container}>
@@ -57,6 +59,9 @@ export default function HomeScreen() {
       </SafeAreaView>
     )
   }
+  //#endregion
+
+  //#region return
   
   return (
     <View style={styles.wrapper}>
