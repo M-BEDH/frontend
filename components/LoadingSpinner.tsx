@@ -4,14 +4,18 @@ import {
   View } from 'react-native'
 import React from 'react'
 import { AppColors } from '@/constants/theme';
+//#region Interface
 // Déclaration de l'interface des props, pour typer les arguments du composant
 interface LoadingSpinnerProps {
+  // Le ? indique que la prop est optionnelle
   size?: "small" | "large";
   color?: string;
   text?: string;
   fullScreen?: boolean;
 }
+//#endregion
 
+//#region LoadingSpinner
 // Définition du composant fonctionnel
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = "small",
@@ -36,6 +40,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     </View>
   )
 }
+//#endregion
 
 export default LoadingSpinner
 
