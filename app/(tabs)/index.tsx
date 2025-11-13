@@ -17,11 +17,14 @@ export default function HomeScreen() {
     fetchProducts, fetchCategories,
     loading, error,
   } = useProductStore();
+  //#region useEffect
   // Premier effet : chargement des produits et catégories à l'ouverture de l'écran
   useEffect(() => {
     fetchProducts();
     fetchCategories();
   }, []);
+  //#endregion
+  //#region useEffect featuredProducts
   // Deuxième effet : sélection de produits "en vedette" quand products change
   useEffect(() => {
     // Si la liste des produits n'est pas vide
@@ -70,6 +73,7 @@ export default function HomeScreen() {
     </View>
   );
 }
+//#endregion
 
 //#region styles
 const styles = StyleSheet.create({
