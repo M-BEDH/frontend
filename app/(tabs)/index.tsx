@@ -26,21 +26,27 @@ export default function HomeScreen() {
     fetchProducts, fetchCategories,
     loading, error,
   } = useProductStore();
+
   // Premier effet : chargement des produits et catégories à l'ouverture de l'écran
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+
   }, []); //[products] = boucle infini attention
   // Deuxième effet : sélection de produits "en vedette" quand products change
   useEffect(() => {
+
     // Si la liste des produits n'est pas vide
     if (products.length > 0) {
+
       // Crée une copie inversée des produits (pour simuler une sélection récente en tête de liste)
       const reverseProducts = [...products].reverse();
       // Met à jour le state local "featuredProducts"
       setFeaturedProducts(reverseProducts as Product[]);
     }
  }, [products]);
+
+ 
 // Fonction pour naviguer vers la page boutique avec une catégorie sélectionnée en paramètre
 const navigateToCategory = (category: string) => {
   router.push({

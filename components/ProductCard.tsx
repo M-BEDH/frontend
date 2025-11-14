@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, { use } from 'react';
 import { Product } from '@/type';
 import { AppColors } from '@/constants/theme';
 import Button from '@/components/Button';
+import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 interface ProductCardProps {
@@ -21,15 +24,30 @@ const ProductCard: React.FC<ProductCardProps> = ({
     product, compact=false, customStyle
 }) => {
     const {id, title, price, category, image} = product;
-    const handleAddToCart = () => {
-      alert(`Produit ${id} ajouté au panier`);
+
+    const router = useRouter();
+    const handleProductRoute = (e: any) => {
+      //Logique de navigation vers la page du produit
+      router.push(`product/${id}` as any);
+
     }
+
+    const handleAddToCart = () => {
+      // Logique pour ajouter le produit au panier
+      Toast.show({
+        type: 'success',
+        text1: `${title} ajouté au panier`,
+        text2: `Voir le panier pour finaliser votre achat.`,
+        visibilityTime: 3000,
+      });
+    }
+
   return (
-    <TouchableOpacity style={
-        [styles.card, compact && styles.compactCard,
-        customStyle]}
-        activeOpacity={0.8}
-        >
+    <TouchableOpacity 
+    onPress={handleProductRoute}
+    style={[ styles.card, compact && styles.compactCard, customStyle ]}
+    activeOpacity={0.8}
+    >
             <View style={styles.imageContainer}>
                 <Image
                 source={{uri: image}}
@@ -47,10 +65,27 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 >
                     {title}
                 </Text>
-                <View style={styles.footer}>
+
+                  <View style={styles.footer}>
                     <Text style={[styles.price, !compact && { marginBottom: 6 }]}>€{price.toFixed(2)}</Text>
-                    {!compact && (<Button title='Ajouter au panier' size='small' variant='outline' onPress={handleAddToCart} />)}
+                    {!compact && (<Button title='Ajout panier' size='small' variant='outline' onPress={handleAddToCart} />)}
                 </View>
+
+                                    {/* Ou autre affichage avec Icone --- ci-dessous */}
+
+                {/* <View style={styles.footer}>
+                    <Text style={[styles.price, !compact && { marginBottom: 6 }]}>€{price.toFixed(2)}</Text>
+                    {!compact && (
+                        <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
+                            <MaterialCommunityIcons 
+                                name="cart-outline" 
+                                size={18} 
+                                color={AppColors.primary[700]}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View> */}
+
             </View>
     </TouchableOpacity>
   )
@@ -100,6 +135,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: AppColors.accent[600],
+  },
+  cartButton: {
+    backgroundColor: AppColors.background.primary,
+    borderWidth: 1,
+    borderColor: AppColors.primary[700],
+    borderRadius: 6,
+    padding: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 6,
   },
   image: {
     width: '100%',
