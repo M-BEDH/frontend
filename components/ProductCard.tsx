@@ -11,7 +11,6 @@ import { AppColors } from '@/constants/theme';
 import Button from '@/components/Button';
 
 
-
 interface ProductCardProps {
     product: Product;
     compact?: boolean; // optionnel pour afficher la version compacte de la card
@@ -22,6 +21,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
     product, compact=false, customStyle
 }) => {
     const {id, title, price, category, image} = product;
+    const handleAddToCart = () => {
+      alert(`Produit ${id} ajouté au panier`);
+    }
   return (
     <TouchableOpacity style={
         [styles.card, compact && styles.compactCard,
@@ -46,8 +48,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     {title}
                 </Text>
                 <View style={styles.footer}>
-                    <Text style={styles.price}>€{price.toFixed(2)}</Text>
-                    {!compact && <Button />}
+                    <Text style={[styles.price, !compact && { marginBottom: 6 }]}>€{price.toFixed(2)}</Text>
+                    {!compact && (<Button title='Ajouter au panier' size='small' variant='outline' onPress={handleAddToCart} />)}
                 </View>
             </View>
     </TouchableOpacity>

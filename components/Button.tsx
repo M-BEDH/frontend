@@ -11,13 +11,11 @@ interface ButtonProps {
   fullWidth?: boolean
   loading?: boolean;
   style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<ViewStyle>;
-  
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const Button:React.FC<ButtonProps> = ({
-  title,
-  onPress,
+  title, onPress,
   variant = 'primary',
   size = 'medium',
   fullWidth = false,
@@ -31,10 +29,11 @@ const Button:React.FC<ButtonProps> = ({
     styles[variant],
     styles[size],
     fullWidth && styles.fullWidth,
-    disabled && styles.disabled
-  ]
+    disabled && styles.disabled,
+    style
+  ];
 
-  const textStyle = [
+  const textStyles = [
     styles.text,
     styles[`${variant}Text`],
     textStyle
@@ -49,11 +48,14 @@ const Button:React.FC<ButtonProps> = ({
     >
       {loading ? (
         <ActivityIndicator 
-          color={variant === 'primary' || variant === 'secondary' ? '#fff' : AppColors.primary[500]} 
+          color={
+            variant === 'primary' 
+            ? AppColors.background.primary
+            : AppColors.primary[500]} 
           size="small" 
         />
       ) : (
-        <Text style={textStyle}>{title}</Text>
+        <Text style={textStyles}>{title}</Text>
       )}
     </TouchableOpacity>
   )
@@ -96,12 +98,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   
-  // Style bu btn
+  // Style btn
   primaryText: {
-    color: '#fff',
+    color: AppColors.background.primary,
   },
   secondaryText: {
-    color: '#fff',
+    color: AppColors.background.primary,
   },
   outlineText: {
     color: AppColors.primary[500],
@@ -114,13 +116,11 @@ const styles = StyleSheet.create({
   small: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-  
- 
   },
   medium: {
-      paddingVertical: 12,
+    paddingVertical: 12,
     paddingHorizontal: 24,
-  
+  },
   large: {
     paddingVertical: 16,
     paddingHorizontal: 32,

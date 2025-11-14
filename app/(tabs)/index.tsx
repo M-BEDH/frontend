@@ -1,37 +1,36 @@
 import HomeHeader from '@/components/HomeHeader';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import ProductCard from '@/components/ProductCard';
-import { View, StyleSheet,
-  Text, ScrollView,
-  TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppColors } from '@/constants/theme';
 import { useState, useEffect } from 'react';
 import { Product } from '@/type';
 import { useProductStore } from '@/store/productStore';
-import { AppColors } from '@/constants/theme';
+import { 
+  View, StyleSheet, 
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
-import { useRouter } from 'expo-router'
-import { FlatList } from 'react-native';
+import { useRouter } from 'expo-router';
+import ProductCard from '@/components/ProductCard';
 
-// #region HomeScreen
 export default function HomeScreen() {
   const router = useRouter();
   // State local pour stocker les "produits en vedette"
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-
   // Extraction des données et méthodes depuis le store Zustand
   const {
     products, categories,
     fetchProducts, fetchCategories,
     loading, error,
   } = useProductStore();
-  //#region useEffect
   // Premier effet : chargement des produits et catégories à l'ouverture de l'écran
   useEffect(() => {
     fetchProducts();
     fetchCategories();
-  }, []);
- 
+  }, []); //[products] = boucle infini attention
   // Deuxième effet : sélection de produits "en vedette" quand products change
   useEffect(() => {
     // Si la liste des produits n'est pas vide
@@ -41,160 +40,148 @@ export default function HomeScreen() {
       // Met à jour le state local "featuredProducts"
       setFeaturedProducts(reverseProducts as Product[]);
     }
-  }, [products]);
-  //#endregion
-  
-  const navigateToCategory = (category: string) => {
-    router.push({
-      pathname: '/(tabs)/shop',
-      params: {
-        category: category
-      },
-    });
-  }
-//#region loading 
-if (loading) {
+ }, [products]);
+// Fonction pour naviguer vers la page boutique avec une catégorie sélectionnée en paramètre
+const navigateToCategory = (category: string) => {
+  router.push({
+    pathname: '/(tabs)/shop',
+    params: { 
+      category 
+    },
+  });
+ }
+// Affichage pendant le chargement : spinner plein écran
+if(loading) {
   return(
+     <SafeAreaView style={styles.container}>
+      <View style={styles.errorContainer}>
+        <LoadingSpinner fullScreen />
+      </View>
+    </SafeAreaView>
+     
+  );
+}
+// Affichage en cas d'erreur lors de la récupération des données
+if (error) {
+  return (
     <SafeAreaView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <LoadingSpinner fullScreen />
-        </View>
-      </SafeAreaView>
-    )
-  }
-  //#endregion
-  //#region error
-  if (error) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Error: {error}</Text>
-        </View>
-      </SafeAreaView>
-    )
-  }
-  //#endregion
-  //#region return
-  // Rendu principal de l'écran Home
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: {error}</Text>
+      </View>
+    </SafeAreaView>
+  )
+}
+  // Rendu principal du composant
   return (
     <View style={styles.wrapper}>
+      {/* En-tête personnalisé de la page */}
       <HomeHeader />
+      {/* Conteneur principal défilable */}
       <View style={styles.contentContainer}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
           contentContainerStyle={styles.scrollContainerView}
         >
-          {/* Section des catégories */}
+           
+           {/* Section des catégories de produits */}
           <View style={styles.categoriesSection}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Catégories</Text>
             </View>
+            {/* Scroll horizontal des catégories */}
             <ScrollView
-            horizontal
-          showsHorizontalScrollIndicator={false}
-        >
-          {categories.map((category) => (
-            <TouchableOpacity
-            style={styles.categoryButton}
-            key={category}
-            onPress={()=>navigateToCategory(category)}
+              horizontal
+              showsHorizontalScrollIndicator={false}
             >
-              <AntDesign
-              name='tag'
-              size={16}
-              color={AppColors.primary[500]}
-              />
-              <Text style={styles.categoryText}>
-                {category.charAt(0).toUpperCase() +
-                 category.slice(1)}</Text>
-            </TouchableOpacity>
-          ))}
-           </ScrollView>
+              {categories?.map((category) => (
+                <TouchableOpacity
+                  style= {styles.categoryButton}
+                  key={category}
+                  onPress={()=>navigateToCategory(category)}
+                >
+                  <AntDesign 
+                    name="tag"
+                    size={16}
+                    color={AppColors.primary[500]}
+                  />
+                  <Text style={styles.categoryText}>
+                    {category.charAt(0).toUpperCase() + 
+                  category.slice(1)}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
-          
-          {/* Section des meilleures ventes */}
+          {/* Section des produits "Meilleurs Ventes" */}
           <View style={styles.featuredSection}>
-           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Meilleures ventes</Text>
-             <TouchableOpacity 
-            //  onPress={navigateToAllProducts}
-             > 
-              <Text style={styles.seeAllText}>Voir tout</Text>
-            </TouchableOpacity>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Meilleurs Ventes</Text>
+                <TouchableOpacity>
+                  {/* onPress={navigateToAllProducts} dans le touchable opacity */}
+                  <Text style={styles.seeAllText}>Voir tout</Text>
+                </TouchableOpacity>
             </View>
-            <FlatList
+            {/* Liste horizontale des produits vedettes */}
+            <FlatList 
               data={featuredProducts}
               keyExtractor={(item) => item.id.toString()}
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.featureProductsContainer}
+              contentContainerStyle={styles.featuredProductsContainer}
               renderItem={({ item }) => (
-                <View style={styles.featureProductContainer}>
+                <View style={styles.featuredProductContainer}>
                   <ProductCard product={item} compact/>
                 </View>
               )}
             />
           </View>
-          {/* Sections des produits les plus récents*/}
+          {/* Section des produits les plus récents */}
           <View style={styles.newestSection}>
-           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Nouveautés</Text>
-             <TouchableOpacity> 
-              <Text style={styles.seeAllText}>Voir tout</Text>
-            </TouchableOpacity>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Nouveautés</Text>
+              <TouchableOpacity>
+                <Text style={styles.seeAllText}>Voir Tout</Text>
+              </TouchableOpacity>
             </View>
-             <View>
+            {/* Grille des produits récents */}
+            <View style={styles.productsGrid}>
               {products?.map((product) => (
                 <View key={product.id} style={styles.productContainer}>
-                  <ProductCard
-                  product={product}
-                  customStyle={{width: '100%'}}
+                  <ProductCard 
+                    product={product}
+                    customStyle={{width: "100%"}}
                   />
                 </View>
               ))}
-             </View>
             </View>
+          </View>
         </ScrollView>
       </View>
     </View>
+    
   );
 }
-//#endregion
 
-//#region styles
 const styles = StyleSheet.create({
+  wrapper: {
+    // flex: 1,
+    backgroundColor: AppColors.background.primary,
+  },
   container: {
     flex: 1,
     backgroundColor: AppColors.background.primary,
+  },
+  contentContainer: {
+    // paddingHorizontal: 20,
+    paddingLeft: 20,
+  },
+  scrollContainerView: {
+    paddingBottom: 300,
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
-  },
-  errorText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: AppColors.accent[500],
-    textAlign: 'center',
-  },
-  wrapper: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingLeft:20,
-    // paddingHorizontal: 20,
-  },
-  categoryText: {
-    marginLeft: 6,
-    fontFamily: 'Inter-Medium',
-    fontSize: 12, 
-    color: AppColors.text.primary,
-    textTransform: 'capitalize',
-  },
-  scrollContainerView: {
-    paddingBottom: 300,
   },
   categoriesSection: {
     marginTop: 10,
@@ -204,11 +191,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: AppColors.background.secondary,
-    paddingVertical:10,
-    paddingHorizontal:12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginRight: 5,
+    marginLeft: 5,
     minWidth: 100,
+  },
+  categoryText: {
+    marginLeft: 6,
+    fontFamily: 'Inter-Medium',
+    fontSize: 12,
+    color: AppColors.text.primary,
+    textTransform: 'capitalize',
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -220,7 +214,45 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: 'Inter-Medium',
     fontSize: 14,
-    color: AppColors.text.primary[500],
+    color: AppColors.primary[500],
   },
+  seeAllText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 14,
+    color: AppColors.primary[500],
+  },
+  errorText: {
+    fontFamily: 'Inter-Medium',
+    fontSize: 16,
+    color: AppColors.accent[600],
+    textAlign: 'center',
+  },
+  productContainer: {
+    width: "48%",
+  },
+  productsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingRight: 20,
+  },
+  newestSection: {
+    marginVertical: 16,
+    marginBottom: 32,
+  },
+  productGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  featuredProductsContainer: {
+
+  },
+  featuredProductContainer: {
+
+  },
+  featuredSection: {
+    marginVertical: 16,
+  },
+
 });
-//#endregion
